@@ -1,0 +1,1 @@
+{"version":1,"defects":{"App\\Tests\\Controller\\CreateAccountControllerShould::returnAResponse":4},"times":{"App\\Tests\\Controller\\CreateAccountControllerShould::returnAResponse":0.004,"App\\Tests\\Controller\\Account\\CreateAccountControllerShould::returnAResponse":2.605}}
