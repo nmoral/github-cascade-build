@@ -3,7 +3,7 @@
 namespace App\Controller\Provider;
 
 use App\Account\GithubAccount;
-use App\Repository\AccountRepository;
+use App\DoctrineRepositories\UserRepository;
 use App\Request\Provider\GithubRedirectRequest;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Response;
@@ -20,27 +20,34 @@ class GithubController
         $params = [
             'client_id'    => $githubClient,
             'redirect_uri' => $router->generate('provider_github_redirect', [], UrlGeneratorInterface::ABSOLUTE_URL),
-            'scope'        => 'write:packages workflow user',
+            'scope'        => 'write:packages workflow user repo',
             'state'        => bin2hex(random_bytes(20)),
         ];
 
         return new RedirectResponse('https://github.com/login/oauth/authorize?'.http_build_query($params));
     }
 
+    /**
+     * @throws \Symfony\Contracts\HttpClient\Exception\TransportExceptionInterface
+     * @throws \Symfony\Contracts\HttpClient\Exception\ServerExceptionInterface
+     * @throws \Symfony\Contracts\HttpClient\Exception\RedirectionExceptionInterface
+     * @throws \Symfony\Contracts\HttpClient\Exception\DecodingExceptionInterface
+     * @throws \Symfony\Contracts\HttpClient\Exception\ClientExceptionInterface
+     */
     #[Route(path: '/redirect', name: 'redirect')]
     public function redirect(
         GithubRedirectRequest $request,
         GithubAccount $githubAccount,
-        AccountRepository $accountRepository,
+        UserRepository $userRepository,
         RouterInterface $router
     ): Response
     {
-        $account = $githubAccount->create($request);
+        $user = $githubAccount->create($request);
 
-        $accountRepository->persist($account);
-        $accountRepository->flush();
+        $userRepository->persist($user);
+        $userRepository->flush();
 
-        return new RedirectResponse($router->generate('dashboard'));
+        return new RedirectResponse($router->generate('user_register', ['id' => $user->id]));
     }
 
 }

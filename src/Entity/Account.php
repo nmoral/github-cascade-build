@@ -3,38 +3,36 @@
 namespace App\Entity;
 
 use App\Dto\Github\GithubUserDto;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping\Column;
 use Doctrine\ORM\Mapping\Entity;
 use Doctrine\ORM\Mapping\GeneratedValue;
 use Doctrine\ORM\Mapping\Id;
+use Doctrine\ORM\Mapping\OneToMany;
 
 #[Entity]
-class Account
+class Account implements BaseEntity
 {
+    #[OneToMany(mappedBy: 'account', targetEntity: User::class)]
+    private Collection $users;
+
+    #[Column(type: 'integer', nullable: false)]
+    #[Id]
+    #[GeneratedValue]
+    private ?int $id = null;
+
     public function __construct(
         #[Column(type: 'integer', nullable: false)]
-        public readonly int $externalId,
+        public int $externalId,
 
         #[Column(type: 'string', length: 100, nullable: false)]
-        public readonly string $name,
+        public string $name,
 
-        #[Column(type: 'string', length: 75, nullable: false)]
-        public readonly string $accessToken,
-
-        #[Column(type: 'string', length: 100, nullable: false)]
-        public readonly string $company,
-
-        #[Column(type: 'string', length: 255, nullable: false)]
-        public readonly string $avatarUrl,
-
-        #[Column(type: 'string', length: 255, nullable: false)]
-        public readonly string $publicProfile,
-
-        #[Column(type: 'integer', nullable: false)]
-        #[Id]
-        #[GeneratedValue]
-        public ?int $id = null,
+        #[Column(type: 'string', length: 50, nullable: false)]
+        public string $login
     ) {
+        $this->users = new ArrayCollection();
     }
 
     public static function createFromGithub(GithubUserDto $dto): self
@@ -42,10 +40,12 @@ class Account
         return new self(
             $dto->id,
             $dto->name,
-            $dto->accessToken,
-            $dto->company,
-            $dto->avatarUrl,
-            $dto->profileUrl
+            $dto->login
         );
+    }
+
+    public function shouldBePersisted(): bool
+    {
+        return null === $this->id;
     }
 }

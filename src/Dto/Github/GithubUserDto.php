@@ -11,6 +11,8 @@ class GithubUserDto
         public readonly string $company,
         public readonly string $avatarUrl,
         public readonly string $profileUrl,
+        public readonly string $login,
+        public readonly ?string $email,
     )
     {
     }
@@ -24,6 +26,8 @@ class GithubUserDto
             $data['company'],
             $data['avatar_url'],
             $data['html_url'],
+            $data['login'],
+            $data['email'],
         );
     }
 

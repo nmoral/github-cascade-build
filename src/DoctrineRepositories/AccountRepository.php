@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Repository;
+namespace App\DoctrineRepositories;
 
 use App\Entity\Account;
 use Doctrine\Persistence\ManagerRegistry;

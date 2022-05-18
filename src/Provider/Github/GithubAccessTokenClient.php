@@ -5,7 +5,7 @@ namespace App\Provider\Github;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Contracts\HttpClient\HttpClientInterface;
 
-class GithubAccessToken
+class GithubAccessTokenClient
 {
     private HttpClientInterface $client;
 

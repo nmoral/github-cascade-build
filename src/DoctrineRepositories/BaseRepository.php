@@ -1,13 +1,17 @@
 <?php
 
-namespace App\Repository;
+namespace App\DoctrineRepositories;
 
+use App\Entity\BaseEntity;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 
 abstract class BaseRepository extends ServiceEntityRepository
 {
-    public function persist($object): void
+    public function persist(BaseEntity $object): void
     {
+        if (!$object->shouldBePersisted()) {
+            return;
+        }
         $this->_em->persist($object);
     }
 

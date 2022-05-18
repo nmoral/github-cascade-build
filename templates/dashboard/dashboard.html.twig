@@ -1,0 +1,25 @@
+{% extends 'base.html.twig' %}
+
+{% block body %}
+    <div style="padding: 15px">
+        <div>Depuis</div>
+        {% for repo in repositories %}
+            <div>{{ repo.name }}</div>
+        {% endfor %}
+    </div>
+    <div style="padding: 15px" data-controller="repository">
+        <div>Vers</div>
+        {% for repo in repositories %}
+            <div data-action="click->repository#select"
+                 data-repository-name-param="{{ repo.name }}">
+                {{ repo.name }}
+            </div>
+        {% endfor %}
+        <div data-controller="workflow"
+             route="{{ path('repository_workflow') }}"
+             data-action="repository:selected@window->workflow#refresh"
+        >
+
+        </div>
+    </div>
+{% endblock %}
