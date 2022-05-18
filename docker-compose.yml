@@ -1,0 +1,7 @@
+version: "3.1"
+
+services:
+  app:
+    image: ghcr.io/nmoral/docker-symfony:6.0-php-8.1-dev
+    volumes:
+      - .:/application
